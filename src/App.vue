@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
+    <h1>Covid-19 Visualisations</h1>
     <TopCountries></TopCountries>
   </div>
 </template>
