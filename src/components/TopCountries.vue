@@ -15,6 +15,7 @@
   import Vue from "vue"
   import TopCountriesChart from "@/components/TopCountriesChart"
   import Data from "@/data"
+  import {call} from "@/utils/apiUtils"
 
   @Component({
     components: {
@@ -29,7 +30,7 @@
     async mounted() {
       this.loaded = false
       try {
-        const data = await fetch("http://localhost:8081/all")
+        const data = await call("all", {first: 5})
         console.log(data)
         this.loaded = true
         this.test = data

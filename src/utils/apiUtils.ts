@@ -1,3 +1,5 @@
+const axios = require(`axios`)
+
 const API_URL = process.env.VUE_APP_API_URL
 
 interface UrlArgs {
@@ -6,10 +8,7 @@ interface UrlArgs {
 
 export const call = async (endpoint: string, args: UrlArgs = {}): Promise<object> => {
   const url = constructUrl(endpoint, args)
-  console.log(`querying ${url}`)
-  const data = await fetch(url)
-  console.log(data)
-  return data
+  return await axios.get(url)
 }
 
 const constructUrl = (endpoint: string, args: UrlArgs): string => {

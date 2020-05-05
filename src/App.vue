@@ -1,7 +1,7 @@
 <template>
   <div id="app">
     <h1>Covid-19 Visualisations</h1>
-    <TopCountries></TopCountries>
+    <TopCountries/>
   </div>
 </template>
 
