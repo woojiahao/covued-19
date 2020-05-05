@@ -6,9 +6,10 @@ interface UrlArgs {
   [Key: string]: string | number;
 }
 
-export const call = async (endpoint: string, args: UrlArgs = {}): Promise<object> => {
+export const get = async (endpoint: string, args: UrlArgs = {}): Promise<object> => {
   const url = constructUrl(endpoint, args)
-  return await axios.get(url)
+  const data = await axios.get(url)
+  return data['data']
 }
 
 const constructUrl = (endpoint: string, args: UrlArgs): string => {

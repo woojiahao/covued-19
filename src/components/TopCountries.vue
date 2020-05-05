@@ -14,8 +14,8 @@
   import Component from "vue-class-component"
   import Vue from "vue"
   import TopCountriesChart from "@/components/TopCountriesChart"
-  import Data from "@/data"
-  import {call} from "@/utils/apiUtils"
+  import Data from "../classes/data"
+  import {get} from "@/utils/apiUtils"
 
   @Component({
     components: {
@@ -24,16 +24,16 @@
   })
   export default class TopCountries extends Vue {
     loaded = false
-    test = new Data()
     options = []
 
     async mounted() {
       this.loaded = false
       try {
-        const data = await call("all", {first: 5})
-        console.log(data)
-        this.loaded = true
-        this.test = data
+        const response = await get("all", {first: 5})
+        const confirmedData = response.confirmed.map(confirmed => new Data(confirmed))
+        console.log(`In ${confirmedData[0].country} ${confirmedData[0].data[0].date}`)
+        // this.loaded = true
+        // this.test = data
       } catch (e) {
         console.log(e)
       }
