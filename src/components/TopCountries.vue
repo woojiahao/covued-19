@@ -4,8 +4,7 @@
     <v-container>
       <TopCountriesChart
         v-if="loaded"
-        :chartData="test"
-        :options="options"/>
+        :chartData="data"/>
     </v-container>
   </v-app>
 </template>
@@ -14,8 +13,8 @@
   import Component from "vue-class-component"
   import Vue from "vue"
   import TopCountriesChart from "@/components/TopCountriesChart"
-  import Data from "../classes/data"
   import {get} from "@/utils/apiUtils"
+  import {GeneralInformation} from "@/classes/general-information"
 
   @Component({
     components: {
@@ -25,15 +24,22 @@
   export default class TopCountries extends Vue {
     loaded = false
     options = []
+    data = []
 
     async mounted() {
       this.loaded = false
       try {
-        const response = await get("all", {first: 5})
-        const confirmedData = response.confirmed.map(confirmed => new Data(confirmed))
-        console.log(`In ${confirmedData[0].country} ${confirmedData[0].data[0].date}`)
-        // this.loaded = true
-        // this.test = data
+        const response = await get("stats/general", {first: 10})
+        const information = response.map(country => new GeneralInformation(
+          country["country_id"],
+          country.country,
+          country.confirmed,
+          country.recovered,
+          country.deaths
+        ))
+        console.log(information)
+        this.loaded = true
+        this.data = information
       } catch (e) {
         console.log(e)
       }
