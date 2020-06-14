@@ -1,10 +1,10 @@
 <template>
   <v-app>
-    <h2>Top countries affected by Covid-19</h2>
+    <h2>Top countries affected by COVID-19</h2>
+
     <v-container>
-      <TopCountriesChart
-        v-if="loaded"
-        :chartData="data"/>
+      <v-select outlined :items="categories" label="Category" :value="categories[0]" v-on:change="loadChartData"/>
+      <TopCountriesChart v-if="loaded" :chartData="data" :category="category"/>
     </v-container>
   </v-app>
 </template>
@@ -15,6 +15,7 @@
   import TopCountriesChart from "@/components/TopCountriesChart"
   import {get} from "@/utils/apiUtils"
   import {GeneralInformation} from "@/classes/general-information"
+  import Category from "@/classes/constants/category"
 
   @Component({
     components: {
@@ -23,13 +24,16 @@
   })
   export default class TopCountries extends Vue {
     loaded = false
-    options = []
     data = []
+    categories = Object.keys(Category).filter(k => isNaN(k))
+    category = this.categories[0]
 
-    async mounted() {
+    async loadChartData(category) {
+      this.category = category
+      this.category = 0
       this.loaded = false
       try {
-        const response = await get("stats/general", {first: 10})
+        const response = await get("stats/general", {first: 10, sort: category})
         const information = response.map(country => new GeneralInformation(
           country["country_id"],
           country.country,
@@ -37,12 +41,15 @@
           country.recovered,
           country.deaths
         ))
-        console.log(information)
         this.loaded = true
         this.data = information
       } catch (e) {
         console.log(e)
       }
+    }
+
+    async mounted() {
+      await this.loadChartData(this.categories[0])
     }
   }
 </script>
